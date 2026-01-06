@@ -1,0 +1,5 @@
+{
+  "name": "IMPCG PoC",
+  "description": "Offline-first clinical decision support tool for South African maternal health guidelines. Features panic-proof MEOWS triage, PPH emergency timer, and local patient caching.",
+  "requestFramePermissions": []
+}

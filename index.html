@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
+    <title>IMPCG 2024 Companion</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      /* Panic-proof touch targets */
+      input, button, select {
+        touch-action: manipulation;
+      }
+      /* Prevent pull-to-refresh on mobile to feel native */
+      body {
+        overscroll-behavior-y: none;
+      }
+    </style>
+    <meta name="theme-color" content="#0f766e" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="icon" href="/icons/icon-192.png" />
+</head>
+  <body class="bg-slate-50 text-slate-900 select-none">
+    <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>
