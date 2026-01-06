@@ -2,25 +2,24 @@
 FROM node:20-slim AS build
 WORKDIR /app
 
-# Copy only package files first for caching
-COPY package.json ./
-# If package-lock.json exists, copy it too (optional)
-COPY package-lock.json* ./
+# Copy only package files first (cache layer)
+COPY package.json package-lock.json ./
 
-# Install dependencies
-RUN npm install --no-audit --no-fund
+# Install deps exactly as lockfile specifies
+RUN npm ci --no-audit --no-fund
 
-# Copy the rest of the source
+# Copy all source code
 COPY . .
 
 # Build the Vite app
 RUN npm run build
 
+
 # ---- Run stage ----
 FROM node:20-slim
 WORKDIR /app
 
-# Copy built output + server
+# Copy only what is needed at runtime
 COPY --from=build /app/dist ./dist
 COPY --from=build /app/public ./public
 COPY --from=build /app/server.mjs ./server.mjs
