@@ -1,4 +1,4 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenAI } from "@google/genai";
 
 /**
  * Vercel Serverless Function
@@ -8,7 +8,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
  * Required env:
  *   - GEMINI_API_KEY
  * Optional env:
- *   - GEMINI_MODEL (default: gemini-1.5-flash)
+ *   - GEMINI_MODEL (default: gemini-2.0-flash)
  */
 
 export default async function handler(req: any, res: any) {
@@ -24,7 +24,7 @@ export default async function handler(req: any, res: any) {
       return;
     }
 
-    // ✅ Robust JSON parsing (works even if req.body is missing)
+    // Robust JSON parsing
     let body = req.body;
     if (!body && req.headers["content-type"]?.includes("application/json")) {
       const buffers: any[] = [];
@@ -38,7 +38,7 @@ export default async function handler(req: any, res: any) {
       return;
     }
 
-    const genAI = new GoogleGenerativeAI(apiKey);
+    const ai = new GoogleGenAI({ apiKey });
 
     const system =
       "You are a document assistant for the South African IMPCG 2024 (maternal and perinatal care). " +
@@ -46,13 +46,14 @@ export default async function handler(req: any, res: any) {
       "Do NOT give personalised medical advice, diagnoses, or dosing for a specific patient. " +
       "Always remind the user to verify against the official guideline and local protocols.";
 
-    const modelName = process.env.GEMINI_MODEL || "gemini-1.5-flash";
-    const model = genAI.getGenerativeModel({ model: modelName });
+    const model = process.env.GEMINI_MODEL || "gemini-2.0-flash";
 
-    const result = await model.generateContent(`${system}\n\nQuestion: ${question}`);
-    const text = result?.response?.text?.() ?? "";
+    const response = await ai.models.generateContent({
+      model,
+      contents: [{ role: "user", parts: [{ text: `${system}\n\nQuestion: ${question}` }] }],
+    });
 
-    res.status(200).json({ text });
+    res.status(200).json({ text: response.text ?? "" });
   } catch (err: any) {
     console.error(err);
     res.status(500).json({ error: err?.message ?? "Server error" });
