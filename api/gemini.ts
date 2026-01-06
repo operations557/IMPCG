@@ -24,7 +24,7 @@ export default async function handler(req: any, res: any) {
       return;
     }
 
-    // Robust JSON parsing
+    // Robust JSON parsing (works even if req.body is missing)
     let body = req.body;
     if (!body && req.headers["content-type"]?.includes("application/json")) {
       const buffers: any[] = [];
